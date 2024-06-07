@@ -1,16 +1,30 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import requests
+from flask import Flask, render_template
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = Flask(__name__, static_folder='static', static_url_path='static')
+api_endpoint = "https://api.npoint.io/8152213a3b7dd208d23f"
+@app.route('/')
+def home_page():
+    data = requests.get(url=api_endpoint).json()
+    return render_template("index.html",posts = data)
 
+@app.route('/about')
+def about():
+    return render_template("about.html")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@app.route('/post/<id_no>')
+def post(id_no):
+    data = requests.get(url=api_endpoint).json()
+    return render_template("post.html", id_no = int(id_no)-1, posts = data)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+@app.route('/contact')
+def contact():
+    return render_template("contact.html")
+
+@app.route('/form-entry')
+def receive_data():
+    return render_template("contact.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
